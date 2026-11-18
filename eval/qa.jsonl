@@ -1,0 +1,12 @@
+{"q": "how long does setup take", "doc": "01-setup.md", "split": "dev"}
+{"q": "what does a solid white light mean", "doc": "01-setup.md", "split": "test"}
+{"q": "how do I give the 2.4 and 5 GHz bands different names", "doc": "02-wifi.md", "split": "test"}
+{"q": "which channels should I use on 2.4 GHz", "doc": "02-wifi.md", "split": "dev"}
+{"q": "can I pause the internet for my kids at night", "doc": "03-parental.md", "split": "test"}
+{"q": "how strict can content filters be", "doc": "03-parental.md", "split": "dev"}
+{"q": "when do firmware updates install", "doc": "04-firmware.md", "split": "test"}
+{"q": "is it safe to unplug during a blue pulsing light", "doc": "04-firmware.md", "split": "test"}
+{"q": "how do I factory reset the router", "doc": "05-reset.md", "split": "test"}
+{"q": "what does a reset erase", "doc": "05-reset.md", "split": "dev"}
+{"q": "where are port forwarding rules", "doc": "06-ports.md", "split": "test"}
+{"q": "can guests see my printer", "doc": "06-ports.md", "split": "test"}
