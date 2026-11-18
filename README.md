@@ -1,3 +1,13 @@
+---
+title: team-alpha-docqa
+emoji: 🧪
+colorFrom: blue
+colorTo: gray
+sdk: docker
+app_port: 8080
+pinned: false
+---
+
 # Orbit DocQA (Team Alpha)
 
 Answers questions about the Orbit Home Router manual, with the source pages it used.
