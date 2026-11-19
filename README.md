@@ -1,28 +1,36 @@
----
-title: team-alpha-docqa
-emoji: 🧪
-colorFrom: blue
-colorTo: gray
-sdk: docker
-app_port: 8080
-pinned: false
----
-
 # Orbit DocQA (Team Alpha)
 
-Answers questions about the Orbit Home Router manual, with the source pages it used.
+**Problem.** Router support teams answer the same questions all day ("how do I factory reset?", "which ports are open?"), and the answers are buried in a 40-page manual.
 
-- Retrieval: BM25 over paragraph chunks of `docs/` (`app/bm25.py`, `app/rag.py`)
-- API: `POST /ask {"q": "..."}` returns `{"answer", "sources"}`, and `GET /health` (`app/main.py`)
-- Evaluation: `python -m eval.eval_retrieval` computes Recall@3 and MRR on the held-out `test` split of `eval/qa.jsonl`.
-  Current result: **Recall@3 = 1.0, MRR = 1.0 on 8 held-out questions**. This is a small and easy set; answers are extractive, not generated.
-- Tests: `pytest -q` (5 tests, run in CI on every push)
+**Solution.** Ask a question, get the exact manual passage that answers it, with the section it came from, so the answer can be checked.
 
+## Architecture
+```
+POST /ask {"q"}  ->  app/main.py  ->  app/rag.py: answer()
+                                     |-- load_chunks(): manual (docs/*.md) split into paragraphs
+                                     |-- BM25 index (app/bm25.py, no external services)
+                                     '-- top passage + its source section -> {"answer", "sources"}
+```
+Retrieval is lexical BM25, written from scratch; answers are extractive (no text generation), so they cannot hallucinate.
+
+## Claims
+- Every answer includes the manual sections it came from (`sources`).
+- Retrieval quality: **Recall@3 = 1.0, MRR = 1.0 on 8 held-out questions** (`python -m eval.eval_retrieval`, test split of `eval/qa.jsonl`). A small, easy set.
+- 5 unit tests, run by GitHub Actions on every push.
+- Live at **https://team-alpha-docqa.vercel.app** (`GET /health`, `POST /ask`).
+
+## Try it
 ```bash
-pip install -r requirements.txt && uvicorn app.main:app
-curl -X POST localhost:8000/ask -H 'Content-Type: application/json' -d '{"q": "how do I factory reset"}'
+curl -s -X POST https://team-alpha-docqa.vercel.app/ask -H 'Content-Type: application/json' -d '{"q": "how do I factory reset"}'
 ```
 
+## Run locally
+```bash
+pip install -r requirements.txt
+uvicorn app.main:app
+pytest -q
+python -m eval.eval_retrieval
+```
 
 ---
 *Synthetic benchmark submission, built to test an AI-hackathon evaluation pipeline. Not a real team's project.*
